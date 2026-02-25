@@ -1,0 +1,416 @@
+/* ── Reset & Base ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  color: var(--vscode-foreground);
+  background: var(--vscode-sideBar-background);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Tab Bar ────────────────────────────────────────────────────────── */
+.tab-bar {
+  display: flex;
+  overflow-x: auto;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--vscode-panel-border);
+  background: var(--vscode-sideBar-background);
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-family: var(--vscode-font-family);
+  color: var(--vscode-tab-inactiveForeground);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.1s;
+}
+.tab:hover { color: var(--vscode-foreground); }
+.tab.active {
+  color: var(--vscode-tab-activeForeground);
+  border-bottom-color: var(--vscode-focusBorder);
+}
+
+/* ── Panels ─────────────────────────────────────────────────────────── */
+.panel {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  gap: 10px;
+  flex-direction: column;
+}
+.panel.active { display: flex; }
+
+/* ── Panel Header ────────────────────────────────────────────────────── */
+.panel-header { margin-bottom: 4px; }
+.panel-title {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vscode-foreground);
+}
+.panel-sub {
+  display: block;
+  font-size: 11px;
+  color: var(--vscode-descriptionForeground);
+  margin-top: 2px;
+}
+
+/* ── Repo branch pill ────────────────────────────────────────────────── */
+.repo-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: var(--vscode-badge-background);
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--vscode-badge-foreground);
+}
+.repo-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #4caf50;
+  flex-shrink: 0;
+}
+.repo-status-badge {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--vscode-descriptionForeground);
+}
+
+/* ── Inputs ──────────────────────────────────────────────────────────── */
+.field-group { display: flex; flex-direction: column; gap: 4px; }
+.field-label { font-size: 11px; color: var(--vscode-descriptionForeground); }
+
+.input-area, .text-input, .select-input {
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  color: var(--vscode-input-foreground);
+  background: var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border, transparent);
+  border-radius: 2px;
+  padding: 5px 7px;
+  width: 100%;
+  outline: none;
+  resize: vertical;
+}
+.input-area:focus, .text-input:focus, .select-input:focus {
+  border-color: var(--vscode-focusBorder);
+}
+
+.commit-msg-area {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 12px;
+  resize: vertical;
+}
+
+code {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 11px;
+  background: var(--vscode-textCodeBlock-background);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────── */
+.btn-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 4px 10px;
+  font-size: 12px;
+  font-family: var(--vscode-font-family);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+.btn-primary:hover { background: var(--vscode-button-hoverBackground); }
+
+.btn-secondary {
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+}
+.btn-secondary:hover { background: var(--vscode-button-secondaryHoverBackground); }
+
+.btn-danger {
+  background: var(--vscode-errorForeground) !important;
+  color: #fff !important;
+}
+
+.btn-icon {
+  padding: 4px 8px;
+  font-size: 13px;
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.btn-icon:hover { background: var(--vscode-button-secondaryHoverBackground); }
+
+/* ── Cards ───────────────────────────────────────────────────────────── */
+.card {
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 3px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--vscode-descriptionForeground);
+}
+
+/* ── Command list (plan) ─────────────────────────────────────────────── */
+.command-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.command-list li {
+  font-size: 11px;
+  background: var(--vscode-textCodeBlock-background);
+  border-radius: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cmd-text {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 11px;
+  color: var(--vscode-foreground);
+  word-break: break-all;
+}
+.cmd-desc { font-size: 10px; color: var(--vscode-descriptionForeground); }
+.cmd-dangerous { color: var(--vscode-errorForeground); font-size: 10px; font-weight: 600; }
+
+.plan-description { font-size: 12px; }
+
+.plan-warnings {
+  background: var(--vscode-inputValidation-warningBackground);
+  border: 1px solid var(--vscode-inputValidation-warningBorder);
+  border-radius: 2px;
+  padding: 5px 8px;
+  font-size: 11px;
+  color: var(--vscode-inputValidation-warningForeground);
+}
+
+/* ── Commit badge row ────────────────────────────────────────────────── */
+.commit-badge-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+  text-transform: uppercase;
+}
+.badge-scope { font-size: 11px; color: var(--vscode-descriptionForeground); }
+.badge-breaking {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: var(--vscode-errorForeground);
+  color: #fff;
+}
+
+/* ── Verdict badge ────────────────────────────────────────────────────── */
+.verdict-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+.verdict-ok    { background: var(--vscode-testing-runAction); color: #fff; }
+.verdict-minor { background: var(--vscode-inputValidation-warningBackground); color: var(--vscode-inputValidation-warningForeground); }
+.verdict-attn  { background: var(--vscode-inputValidation-warningBackground); color: var(--vscode-inputValidation-warningForeground); }
+.verdict-crit  { background: var(--vscode-errorForeground); color: #fff; }
+
+.review-summary { font-size: 12px; color: var(--vscode-foreground); }
+
+/* ── Findings ────────────────────────────────────────────────────────── */
+.findings-list { display: flex; flex-direction: column; gap: 5px; }
+.finding {
+  font-size: 11px;
+  padding: 5px 8px;
+  border-radius: 2px;
+  border-left: 3px solid transparent;
+}
+.finding-error   { background: var(--vscode-inputValidation-errorBackground); border-left-color: var(--vscode-errorForeground); }
+.finding-warning { background: var(--vscode-inputValidation-warningBackground); border-left-color: var(--vscode-inputValidation-warningBorder); }
+.finding-info    { background: var(--vscode-textCodeBlock-background); border-left-color: var(--vscode-focusBorder); }
+.finding-header  { font-weight: 600; font-size: 11px; }
+.finding-body    { font-size: 11px; color: var(--vscode-foreground); margin-top: 2px; }
+
+/* ── Branch list ──────────────────────────────────────────────────────── */
+.branch-list { display: flex; flex-direction: column; gap: 6px; }
+.branch-item {
+  padding: 8px;
+  background: var(--vscode-textCodeBlock-background);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.branch-name {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vscode-foreground);
+}
+.branch-rationale { font-size: 11px; color: var(--vscode-descriptionForeground); }
+.branch-actions { display: flex; gap: 5px; margin-top: 3px; }
+
+/* ── Atomic groups ───────────────────────────────────────────────────── */
+.atomic-groups { display: flex; flex-direction: column; gap: 6px; }
+.atomic-group {
+  padding: 8px;
+  background: var(--vscode-textCodeBlock-background);
+  border-radius: 2px;
+  font-size: 11px;
+}
+.atomic-group-msg { font-weight: 600; font-size: 12px; font-family: var(--vscode-editor-font-family, monospace); }
+.atomic-group-files { color: var(--vscode-descriptionForeground); margin-top: 3px; }
+.atomic-group-why { color: var(--vscode-foreground); margin-top: 2px; font-style: italic; }
+
+/* ── Log list ────────────────────────────────────────────────────────── */
+.section-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--vscode-descriptionForeground);
+  margin-top: 4px;
+}
+
+.log-list { display: flex; flex-direction: column; gap: 2px; }
+.log-item {
+  display: flex;
+  gap: 8px;
+  padding: 3px 4px;
+  border-radius: 2px;
+  font-size: 11px;
+  align-items: baseline;
+}
+.log-item:hover { background: var(--vscode-list-hoverBackground); }
+.log-hash {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 10px;
+  color: var(--vscode-descriptionForeground);
+  flex-shrink: 0;
+  min-width: 45px;
+}
+.log-subject { color: var(--vscode-foreground); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.log-author  { font-size: 10px; color: var(--vscode-descriptionForeground); flex-shrink: 0; }
+
+/* ── File list (conflict) ────────────────────────────────────────────── */
+.file-list { display: flex; flex-direction: column; gap: 3px; }
+.file-item {
+  font-size: 11px;
+  padding: 4px 8px;
+  background: var(--vscode-inputValidation-errorBackground);
+  border-left: 3px solid var(--vscode-errorForeground);
+  border-radius: 2px;
+  font-family: var(--vscode-editor-font-family, monospace);
+}
+
+/* ── Settings specifics ──────────────────────────────────────────────── */
+.select-row { display: flex; gap: 5px; align-items: center; }
+.flex-1 { flex: 1; }
+
+.key-status { font-size: 10px; margin-left: 6px; color: #4caf50; }
+.key-status.missing { color: var(--vscode-errorForeground); }
+
+.separator { height: 1px; background: var(--vscode-panel-border); margin: 4px 0; }
+
+.kbd-list { display: flex; flex-direction: column; gap: 4px; }
+.kbd-row { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+kbd {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 10px;
+  padding: 1px 5px;
+  background: var(--vscode-textCodeBlock-background);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 2px;
+}
+
+.cmd-list { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.cmd-list li {
+  font-size: 11px;
+  padding: 3px 0;
+  color: var(--vscode-descriptionForeground);
+}
+
+/* ── Result pre ─────────────────────────────────────────────────────── */
+.result-pre {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 11px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  background: var(--vscode-textCodeBlock-background);
+  padding: 8px;
+  border-radius: 2px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* ── Hint ────────────────────────────────────────────────────────────── */
+.hint {
+  font-size: 11px;
+  color: var(--vscode-descriptionForeground);
+}
+
+/* ── Spinner overlay ─────────────────────────────────────────────────── */
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 999;
+}
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--vscode-foreground);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#spinnerLabel { font-size: 12px; color: var(--vscode-foreground); }
+
+/* ── Utilities ────────────────────────────────────────────────────────── */
+.hidden { display: none !important; }

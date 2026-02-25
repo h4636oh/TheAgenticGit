@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'none'; style-src {{cspSource}} 'unsafe-inline'; script-src 'nonce-{{nonce}}';" />
+  <link rel="stylesheet" href="{{styleUri}}" />
+  <title>TheAgenticGit</title>
+</head>
+
+<body>
+  <!-- Tab bar -->
+  <nav class="tab-bar" id="tabBar">
+    <button class="tab active" data-tab="sentinel" title="Ask Sentinel">Sentinel</button>
+    <button class="tab" data-tab="commit" title="Smart Commit">Commit</button>
+    <button class="tab" data-tab="review" title="Code Review">Review</button>
+    <button class="tab" data-tab="atomic" title="Atomic Commits">Atomic</button>
+    <button class="tab" data-tab="branch" title="Branch Namer">Branch</button>
+    <button class="tab" data-tab="conflict" title="Conflict Resolver">Conflict</button>
+    <button class="tab" data-tab="settings" title="Settings">Settings</button>
+  </nav>
+
+  <!-- ── Tab: Ask Sentinel (Natural Language Git) ─── -->
+  <section class="panel active" id="panel-sentinel">
+    <div class="panel-header">
+      <span class="panel-title">Ask Sentinel</span>
+      <span class="panel-sub">Natural language Git commands</span>
+    </div>
+
+    <div class="repo-pill" id="repoBranchPill">
+      <span class="repo-dot"></span>
+      <span id="currentBranch">—</span>
+      <span id="repoStatus" class="repo-status-badge">loading...</span>
+    </div>
+
+    <div class="field-group">
+      <textarea id="sentinelPrompt" class="input-area" rows="3"
+        placeholder="e.g. Squash my last 3 commits into one&#10;e.g. Undo last commit, keep files staged&#10;e.g. Create and push a new branch called feat/auth"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="btnPlan">Plan Action</button>
+      <button class="btn-secondary" id="btnRefreshStatus">↺ Refresh</button>
+    </div>
+
+    <!-- Dry-run plan display -->
+    <div class="card hidden" id="planCard">
+      <div class="card-label">Planned Actions</div>
+      <div id="planDescription" class="plan-description"></div>
+      <div id="planWarnings" class="plan-warnings hidden"></div>
+      <ul id="planCommandList" class="command-list"></ul>
+      <div class="btn-row">
+        <button class="btn-primary btn-danger" id="btnExecute">Execute Plan</button>
+        <button class="btn-secondary" id="btnDiscardPlan">Discard</button>
+      </div>
+    </div>
+
+    <!-- Execution results -->
+    <div class="card hidden" id="sentinelResult">
+      <div class="card-label">Result</div>
+      <pre id="sentinelResultText" class="result-pre"></pre>
+    </div>
+
+    <!-- Recent commits -->
+    <div class="section-label">Recent commits</div>
+    <div id="recentLog" class="log-list"></div>
+  </section>
+
+  <!-- ── Tab: Smart Commit ─────────────────────────────── -->
+  <section class="panel" id="panel-commit">
+    <div class="panel-header">
+      <span class="panel-title">Smart Commit</span>
+      <span class="panel-sub">AI-generated conventional commit message</span>
+    </div>
+
+    <p class="hint">Stage your changes first (<code>git add</code>), then generate.</p>
+
+    <button class="btn-primary" id="btnGenerateCommit">Generate Message</button>
+
+    <div class="card hidden" id="commitCard">
+      <div class="card-label">Suggested Message</div>
+      <div class="commit-badge-row">
+        <span class="badge" id="commitTypeBadge"></span>
+        <span class="badge-scope" id="commitScopeBadge"></span>
+        <span class="badge-breaking hidden" id="commitBreakingBadge">BREAKING</span>
+      </div>
+      <textarea id="commitMessageArea" class="input-area commit-msg-area" rows="5"></textarea>
+      <div class="btn-row">
+        <button class="btn-primary" id="btnApplyCommit">Apply Commit</button>
+        <button class="btn-secondary" id="btnCopyCommit">Copy</button>
+        <button class="btn-secondary" id="btnRegenCommit">Regenerate</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Tab: Code Review ──────────────────────────────── -->
+  <section class="panel" id="panel-review">
+    <div class="panel-header">
+      <span class="panel-title">Code Review</span>
+      <span class="panel-sub">AI review of your staged diff</span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" id="btnReviewStaged">Review Staged</button>
+      <button class="btn-secondary" id="btnReviewFull">Review All Changes</button>
+    </div>
+
+    <div class="card hidden" id="reviewCard">
+      <div class="card-label">Review</div>
+      <div id="reviewVerdict" class="verdict-badge"></div>
+      <p id="reviewSummary" class="review-summary"></p>
+      <div id="reviewFindings" class="findings-list"></div>
+    </div>
+  </section>
+
+  <!-- ── Tab: Atomic Commits ───────────────────────────── -->
+  <section class="panel" id="panel-atomic">
+    <div class="panel-header">
+      <span class="panel-title">Atomic Commits</span>
+      <span class="panel-sub">Split staged changes into logical commits</span>
+    </div>
+
+    <p class="hint">Stages all your changes. AI groups them into focused, atomic commits.</p>
+
+    <button class="btn-primary" id="btnAnalyzeAtomic">Analyze Changes</button>
+
+    <div class="card hidden" id="atomicPlanCard">
+      <div class="card-label">Split Plan</div>
+      <p id="atomicSummary" class="plan-description"></p>
+      <div id="atomicGroups" class="atomic-groups"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-danger" id="btnExecuteAtomic">Execute Split</button>
+        <button class="btn-secondary" id="btnDiscardAtomic">Discard</button>
+      </div>
+    </div>
+
+    <div class="card hidden" id="atomicResult">
+      <div class="card-label">Result</div>
+      <pre id="atomicResultText" class="result-pre"></pre>
+    </div>
+  </section>
+
+  <!-- ── Tab: Branch Namer ─────────────────────────────── -->
+  <section class="panel" id="panel-branch">
+    <div class="panel-header">
+      <span class="panel-title">Branch Namer</span>
+      <span class="panel-sub">Semantic branch name suggestions</span>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Task / Feature Description</label>
+      <textarea id="branchDescription" class="input-area" rows="2"
+        placeholder="e.g. Add JWT authentication to the login endpoint"></textarea>
+    </div>
+
+    <button class="btn-primary" id="btnSuggestBranch">Suggest Names</button>
+
+    <div class="card hidden" id="branchCard">
+      <div class="card-label">Suggestions</div>
+      <div id="branchList" class="branch-list"></div>
+    </div>
+  </section>
+
+  <!-- ── Tab: Conflict Resolver ────────────────────────── -->
+  <section class="panel" id="panel-conflict">
+    <div class="panel-header">
+      <span class="panel-title">Conflict Resolver</span>
+      <span class="panel-sub">AI-powered merge conflict resolution</span>
+    </div>
+
+    <p class="hint">Opens conflicted files, uses AI to resolve each conflict, and stages the results.</p>
+
+    <div id="conflictedFileList" class="file-list"></div>
+
+    <div class="btn-row">
+      <button class="btn-primary btn-danger" id="btnResolveAll">Resolve All Conflicts</button>
+    </div>
+
+    <div class="card hidden" id="conflictResult">
+      <div class="card-label">Resolutions</div>
+      <div id="conflictResultList" class="findings-list"></div>
+    </div>
+  </section>
+
+  <!-- ── Tab: Settings ─────────────────────────────────── -->
+  <section class="panel" id="panel-settings">
+    <div class="panel-header">
+      <span class="panel-title">Settings</span>
+      <span class="panel-sub">Provider, model, and API keys</span>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">AI Provider</label>
+      <select id="providerSelect" class="select-input">
+        <option value="ollama">Ollama (Local)</option>
+        <option value="openai">OpenAI</option>
+        <option value="anthropic">Anthropic</option>
+        <option value="gemini">Gemini</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Model</label>
+      <div class="select-row">
+        <select id="modelSelect" class="select-input flex-1">
+          <option value="">Loading...</option>
+        </select>
+        <button class="btn-icon" id="btnRefreshModels" title="Refresh model list">↺</button>
+      </div>
+    </div>
+
+    <!-- Only show for non-Ollama providers -->
+    <div class="field-group" id="apiKeyGroup">
+      <label class="field-label">API Key <span id="keyStatus" class="key-status"></span></label>
+      <div class="select-row">
+        <input type="password" id="apiKeyInput" class="text-input flex-1" placeholder="Paste your API key..." />
+        <button class="btn-secondary" id="btnSaveKey">Save</button>
+      </div>
+    </div>
+
+    <!-- Ollama base URL -->
+    <div class="field-group" id="ollamaUrlGroup">
+      <label class="field-label">Ollama Base URL</label>
+      <input type="text" id="ollamaUrlInput" class="text-input" value="http://localhost:11434" />
+    </div>
+
+    <div class="separator"></div>
+    <div class="section-label">Keyboard Shortcuts</div>
+    <div class="kbd-list">
+      <div class="kbd-row"><kbd>Ctrl+Shift+G Ctrl+Shift+C</kbd><span>Smart Commit</span></div>
+    </div>
+
+    <div class="separator"></div>
+    <div class="section-label">Palette Commands</div>
+    <ul class="cmd-list">
+      <li>TheAgenticGit: Generate Smart Commit Message</li>
+      <li>TheAgenticGit: AI Code Review</li>
+      <li>TheAgenticGit: Suggest Branch Name</li>
+      <li>TheAgenticGit: Resolve Merge Conflicts</li>
+      <li>TheAgenticGit: Atomic Commit Splitter</li>
+    </ul>
+  </section>
+
+  <!-- Global spinner overlay -->
+  <div class="spinner-overlay hidden" id="spinnerOverlay">
+    <div class="spinner"></div>
+    <span id="spinnerLabel">Working...</span>
+  </div>
+
+  <script nonce="{{nonce}}" src="{{scriptUri}}"></script>
+</body>
+
+</html>
+</body>
+
+</html>

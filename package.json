@@ -1,0 +1,128 @@
+{
+  "name": "the-agentic-git",
+  "displayName": "TheAgenticGit",
+  "description": "An agentic AI-powered Git assistant — smart commits, natural language git, code review, conflict resolution, and more.",
+  "version": "1.0.0",
+  "publisher": "h4636oh",
+  "icon": "resources/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "SCM Providers",
+    "AI",
+    "Other"
+  ],
+  "keywords": [
+    "git",
+    "ai",
+    "agent",
+    "commit",
+    "llm"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "theAgenticGit",
+          "title": "TheAgenticGit",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "theAgenticGit": [
+        {
+          "type": "webview",
+          "id": "theAgenticGit.sidebar",
+          "name": "Agentic Git",
+          "icon": "resources/icon.svg",
+          "contextualTitle": "TheAgenticGit"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "theAgenticGit.smartCommit",
+        "title": "TheAgenticGit: Generate Smart Commit Message",
+        "icon": "$(git-commit)"
+      },
+      {
+        "command": "theAgenticGit.reviewDiff",
+        "title": "TheAgenticGit: AI Code Review",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "theAgenticGit.suggestBranch",
+        "title": "TheAgenticGit: Suggest Branch Name",
+        "icon": "$(git-branch)"
+      },
+      {
+        "command": "theAgenticGit.resolveConflicts",
+        "title": "TheAgenticGit: Resolve Merge Conflicts",
+        "icon": "$(merge)"
+      },
+      {
+        "command": "theAgenticGit.atomicCommits",
+        "title": "TheAgenticGit: Atomic Commit Splitter",
+        "icon": "$(split-horizontal)"
+      },
+      {
+        "command": "theAgenticGit.openPanel",
+        "title": "TheAgenticGit: Open Panel",
+        "icon": "$(robot)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "theAgenticGit.smartCommit",
+        "key": "ctrl+shift+g ctrl+shift+c",
+        "when": "editorFocus"
+      }
+    ],
+    "configuration": {
+      "title": "TheAgenticGit",
+      "properties": {
+        "theAgenticGit.provider": {
+          "type": "string",
+          "enum": ["openai", "anthropic", "gemini", "ollama"],
+          "default": "ollama",
+          "description": "The AI provider to use."
+        },
+        "theAgenticGit.model": {
+          "type": "string",
+          "default": "",
+          "description": "The model to use (leave blank to use provider default)."
+        },
+        "theAgenticGit.ollamaBaseUrl": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Base URL for the local Ollama server."
+        },
+        "theAgenticGit.requireApprovalBeforeExecute": {
+          "type": "boolean",
+          "default": true,
+          "description": "Always show a dry-run preview and require approval before executing git commands."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "vscode:prepublish": "node esbuild.js --production"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
