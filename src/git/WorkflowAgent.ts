@@ -83,16 +83,18 @@ Respond with the JSON plan only.
         const results: string[] = [];
 
         for (const cmd of plan.commands) {
-            const label = `Running: git ${cmd.args}`;
+            // Fallback: if the LLM forgot 'args' or left it empty, derive it from 'command'
+            const args = cmd.args || cmd.command.replace(/^git\s+/, '');
+            const label = `Running: git ${args}`;
             webview?.webview.postMessage({ type: 'execStep', label });
 
             try {
-                const { stdout, stderr } = await this.gitService.runCommand(cmd.args);
+                const { stdout, stderr } = await this.gitService.runCommand(args);
                 const output = [stdout, stderr].filter(Boolean).join('\n');
                 results.push(`✓ ${cmd.description}\n${output}`.trim());
             } catch (err: any) {
                 results.push(`✗ ${cmd.description}\nError: ${err.message}`);
-                throw new Error(`Command failed: git ${cmd.args}\n${err.message}`);
+                throw new Error(`Command failed: git ${args}\n${err.message}`);
             }
         }
 
